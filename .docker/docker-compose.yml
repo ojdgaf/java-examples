@@ -1,0 +1,56 @@
+version: '3.5'
+
+services:
+  tomcat:
+    image: tomcat
+    container_name: tom
+    restart: always
+    volumes:
+        # add user for web management interface
+      - ./tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+        # remove IP address restriction and allow connections from anywhere
+      - ./context.xml:/usr/local/tomcat/webapps/manager/META-INF/context.xml
+      - ../:$CONTAINER_DIR
+    ports:
+      - $TOMCAT_PORT:8080
+    networks:
+      - apps
+
+  maven:
+    image: maven
+    container_name: mav
+    restart: always
+    command: tail -f /dev/null # keep the container running in background
+    volumes:
+        # reuse local Maven repository
+      - $HOME/.m2/repository:/root/.m2/repository
+        # add deployment credentials
+      - ./settings.xml:/usr/share/maven/ref/settings.xml
+      - ..:$CONTAINER_DIR
+    networks:
+      - apps
+
+  db:
+    image: postgres
+    container_name: pos
+    restart: always
+    environment:
+        POSTGRES_USER: $DB_USER
+        POSTGRES_PASSWORD: $DB_PASSWORD
+    ports:
+      - $DB_PORT:5432
+    networks:
+      - apps
+
+  adminer:
+    image: adminer
+    container_name: adm
+    restart: always
+    ports:
+      - $ADMINER_PORT:8080
+    networks:
+      - apps
+
+networks:
+  apps:
+    name: apps
