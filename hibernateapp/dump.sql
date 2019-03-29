@@ -1,12 +1,6 @@
--- Adminer 4.7.0 PostgreSQL dump
-
--- \connect "university";
-
-
-
 DROP TABLE IF EXISTS "courses" CASCADE;
 DROP SEQUENCE IF EXISTS courses_id_seq CASCADE;
-CREATE SEQUENCE courses_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;
+CREATE SEQUENCE courses_id_seq START 6;
 
 CREATE TABLE "public"."courses" (
     "id" integer DEFAULT nextval('courses_id_seq') NOT NULL,
@@ -26,7 +20,7 @@ INSERT INTO "courses" ("id", "name") VALUES
 
 DROP TABLE IF EXISTS "students" CASCADE;
 DROP SEQUENCE IF EXISTS students_id_seq CASCADE;
-CREATE SEQUENCE students_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;
+CREATE SEQUENCE students_id_seq START 3;
 
 CREATE TABLE "public"."students" (
     "id" integer DEFAULT nextval('students_id_seq') NOT NULL,
@@ -43,7 +37,7 @@ INSERT INTO "students" ("id", "first_name", "last_name") VALUES
 
 DROP TABLE IF EXISTS "record_books" CASCADE;
 DROP SEQUENCE IF EXISTS record_books_id_seq CASCADE;
-CREATE SEQUENCE record_books_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;
+CREATE SEQUENCE record_books_id_seq START 3;
 
 CREATE TABLE "public"."record_books" (
     "id" integer DEFAULT nextval('record_books_id_seq') NOT NULL,
@@ -62,7 +56,7 @@ INSERT INTO "record_books" ("id", "student_id", "serial_number") VALUES
 
 DROP TABLE IF EXISTS "phones" CASCADE;
 DROP SEQUENCE IF EXISTS phones_id_seq CASCADE;
-CREATE SEQUENCE phones_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;
+CREATE SEQUENCE phones_id_seq START 4;
 
 CREATE TABLE "public"."phones" (
     "id" integer DEFAULT nextval('phones_id_seq') NOT NULL,
@@ -94,5 +88,3 @@ INSERT INTO "student_course" ("student_id", "course_id") VALUES
 (1,	5),
 (2,	1),
 (2,	4);
-
--- 2019-03-26
