@@ -4,11 +4,9 @@
         <title>Spring Application Example</title>
     </head>
     <body>
-        <form:form action="${pageContext.request.contextPath}/logout" method="POST">
-            <input type="submit" value="logout"/>
-        </form:form>
+        <a href="${pageContext.request.contextPath}/logout">Logout</a>
         <hr/>
-        <h1>Home Page</h1>
+            <h1>Home Page</h1>
         <a href="${pageContext.request.contextPath}/faculties">List of faculties</a>
     </body>
 </html>
