@@ -10,11 +10,11 @@ services:
       - ./tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
         # remove IP address restriction and allow connections from anywhere
       - ./context.xml:/usr/local/tomcat/webapps/manager/META-INF/context.xml
-      - ../:$CONTAINER_DIR
+      - ../examples:$CONTAINER_DIR
     ports:
       - $TOMCAT_PORT:8080
     networks:
-      - apps
+      - examples
 
   maven:
     image: maven
@@ -27,9 +27,9 @@ services:
       - $HOME/.m2/repository:/root/.m2/repository
         # add deployment credentials
       - ./settings.xml:/usr/share/maven/ref/settings.xml
-      - ..:$CONTAINER_DIR
+      - ../examples:$CONTAINER_DIR
     networks:
-      - apps
+      - examples
 
   db:
     image: postgres
@@ -41,7 +41,7 @@ services:
     ports:
       - $DB_PORT:5432
     networks:
-      - apps
+      - examples
 
   adminer:
     image: adminer
@@ -50,8 +50,8 @@ services:
     ports:
       - $ADMINER_PORT:8080
     networks:
-      - apps
+      - examples
 
 networks:
-  apps:
-    name: apps
+  examples:
+    name: examples
