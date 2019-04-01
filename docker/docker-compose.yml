@@ -38,6 +38,8 @@ services:
     environment:
         POSTGRES_USER: $DB_USER
         POSTGRES_PASSWORD: $DB_PASSWORD
+    volumes:
+      - ../database_dump.sql:/database_dump.sql
     ports:
       - $DB_PORT:5432
     networks:
