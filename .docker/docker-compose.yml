@@ -21,6 +21,7 @@ services:
     container_name: mav
     restart: always
     command: tail -f /dev/null # keep the container running in background
+    working_dir: $CONTAINER_DIR
     volumes:
         # reuse local Maven repository
       - $HOME/.m2/repository:/root/.m2/repository
