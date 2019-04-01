@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context.xsd
+    	http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/aop
+   		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <!-- Step 1: Add support for component scanning -->
+    <context:component-scan base-package="com.ojdgaf.examples.springapp"/>
+
+    <!-- Step 2: Add support for conversion, formatting and validation support -->
+    <mvc:annotation-driven/>
+
+    <!-- Step 3: Enable AspectJ style of Spring AOP -->
+    <aop:aspectj-autoproxy/>
+
+    <!-- Step 4: Define Transaction Manager -->
+    <import resource="database.xml"/>
+
+    <!-- Step 5: Define Spring MVC view resolver -->
+    <import resource="views.xml"/>
+
+    <!-- Step 6: Add support for reading web resources: css, images, js, etc ... -->
+    <mvc:resources location="/resources/" mapping="/resources/**"/>
+
+    <!-- Step 7: Enable security -->
+    <import resource="security.xml"/>
+
+    <!-- Step 8: Add beans -->
+    <import resource="beans.xml"/>
+</beans>
+
+
+
+
+

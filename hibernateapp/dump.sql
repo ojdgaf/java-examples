@@ -1,3 +1,21 @@
+DROP TABLE IF EXISTS "faculties" CASCADE;
+DROP SEQUENCE IF EXISTS faculties_id_seq CASCADE;
+CREATE SEQUENCE faculties_id_seq START 5;
+
+CREATE TABLE "public"."faculties" (
+    "id" integer DEFAULT nextval('faculties_id_seq') NOT NULL,
+    "name" character varying(100) NOT NULL
+) WITH (oids = false);
+
+INSERT INTO "faculties" ("id", "name") VALUES
+(1,	'IT Faculty'),
+(2,	'Faculty of Arts'),
+(3,	'Faculty of Science'),
+(4,	'School of Business, Economics and Law');
+
+
+
+
 DROP TABLE IF EXISTS "courses" CASCADE;
 DROP SEQUENCE IF EXISTS courses_id_seq CASCADE;
 CREATE SEQUENCE courses_id_seq START 6;
