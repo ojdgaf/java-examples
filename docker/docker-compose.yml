@@ -28,6 +28,8 @@ services:
         # add deployment credentials
       - ./settings.xml:/usr/share/maven/ref/settings.xml
       - ../examples:$CONTAINER_DIR
+    ports:
+      - $MAVEN_PORT:8080
     networks:
       - examples
 
