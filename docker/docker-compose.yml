@@ -10,7 +10,6 @@ services:
       - ./tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
         # remove IP address restriction and allow connections from anywhere
       - ./context.xml:/usr/local/tomcat/webapps/manager/META-INF/context.xml
-      - ../examples:$CONTAINER_DIR
     ports:
       - $TOMCAT_PORT:8080
     networks:
@@ -21,13 +20,14 @@ services:
     container_name: mav
     restart: always
     command: tail -f /dev/null # keep the container running in background
-    working_dir: $CONTAINER_DIR
+    working_dir: /examples
     volumes:
+      - ../examples:/examples
+      - ../scripts/maven.sh:/maven.sh
         # reuse local Maven repository
       - $HOME/.m2/repository:/root/.m2/repository
         # add deployment credentials
       - ./settings.xml:/usr/share/maven/ref/settings.xml
-      - ../examples:$CONTAINER_DIR
     ports:
       - $MAVEN_PORT:8080
     networks:
@@ -41,7 +41,7 @@ services:
         POSTGRES_USER: $DB_USER
         POSTGRES_PASSWORD: $DB_PASSWORD
     volumes:
-      - ../database_dump.sql:/database_dump.sql
+      - ../scripts/dump.sql:/dump.sql
     ports:
       - $DB_PORT:5432
     networks:
