@@ -2,7 +2,6 @@ package com.ojdgaf.examples.bootapp.config;
 
 import com.ojdgaf.examples.bootapp.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -33,7 +32,6 @@ public class Security extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        String s;
         return new BCryptPasswordEncoder();
     }
 }
