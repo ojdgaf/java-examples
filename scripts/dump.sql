@@ -147,6 +147,39 @@ CREATE TABLE public.record_books (
 ALTER TABLE public.record_books OWNER TO root;
 
 --
+-- Name: roles; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.roles (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.roles OWNER TO root;
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.roles_id_seq OWNER TO root;
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.roles_id_seq OWNED BY public.roles.id;
+
+
+--
 -- Name: student_course; Type: TABLE; Schema: public; Owner: root
 --
 
@@ -184,6 +217,67 @@ CREATE TABLE public.students (
 
 
 ALTER TABLE public.students OWNER TO root;
+
+--
+-- Name: user_role; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.user_role (
+    user_id integer NOT NULL,
+    role_id integer NOT NULL
+);
+
+
+ALTER TABLE public.user_role OWNER TO root;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    email character varying(100) NOT NULL,
+    password character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO root;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO root;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: roles id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.roles ALTER COLUMN id SET DEFAULT nextval('public.roles_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
 
 --
 -- Data for Name: courses; Type: TABLE DATA; Schema: public; Owner: root
@@ -232,6 +326,16 @@ COPY public.record_books (id, student_id, serial_number) FROM stdin;
 
 
 --
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.roles (id, name) FROM stdin;
+1	user
+2	admin
+\.
+
+
+--
 -- Data for Name: student_course; Type: TABLE DATA; Schema: public; Owner: root
 --
 
@@ -249,8 +353,28 @@ COPY public.student_course (student_id, course_id) FROM stdin;
 --
 
 COPY public.students (id, first_name, last_name) FROM stdin;
-2	Johnny	Depp
 1	Tom	Hardy
+2	Johnny	Depp
+\.
+
+
+--
+-- Data for Name: user_role; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.user_role (user_id, role_id) FROM stdin;
+1	1
+2	2
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.users (id, name, email, password) FROM stdin;
+1	user	user@mail.com	$2y$12$vk8xQ24TPiQcxi3NzhTpfeX4p7nN2oNuLb.P07RJebRcEphlQqkLq
+2	admin	admin@mail.com	$2y$12$oalaqGkShKWecOCuY9.JBuTkY.ncWdJ5dks4pHSYq8kDCcGpCYm/y
 \.
 
 
@@ -283,10 +407,24 @@ SELECT pg_catalog.setval('public.record_books_id_seq', 3, false);
 
 
 --
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.roles_id_seq', 3, true);
+
+
+--
 -- Name: students_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
 SELECT pg_catalog.setval('public.students_id_seq', 3, false);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 3, true);
 
 
 --
@@ -314,6 +452,14 @@ ALTER TABLE ONLY public.record_books
 
 
 --
+-- Name: roles roles_pk; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_pk PRIMARY KEY (id);
+
+
+--
 -- Name: student_course student_course_ck; Type: CONSTRAINT; Schema: public; Owner: root
 --
 
@@ -327,6 +473,22 @@ ALTER TABLE ONLY public.student_course
 
 ALTER TABLE ONLY public.students
     ADD CONSTRAINT students_pk PRIMARY KEY (id);
+
+
+--
+-- Name: user_role user_role_ck; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.user_role
+    ADD CONSTRAINT user_role_ck UNIQUE (user_id, role_id);
+
+
+--
+-- Name: users users_pk; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pk PRIMARY KEY (id);
 
 
 --
@@ -359,6 +521,22 @@ ALTER TABLE ONLY public.student_course
 
 ALTER TABLE ONLY public.student_course
     ADD CONSTRAINT student_course_student_fk FOREIGN KEY (student_id) REFERENCES public.students(id);
+
+
+--
+-- Name: user_role user_role_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.user_role
+    ADD CONSTRAINT user_role_role_fk FOREIGN KEY (role_id) REFERENCES public.roles(id);
+
+
+--
+-- Name: user_role user_role_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.user_role
+    ADD CONSTRAINT user_role_user_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
