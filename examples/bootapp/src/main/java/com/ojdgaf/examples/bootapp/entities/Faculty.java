@@ -11,7 +11,7 @@ public class Faculty implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
+    @Column
     @NotNull @NotEmpty
     private String name;
 
