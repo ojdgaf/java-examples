@@ -373,8 +373,8 @@ COPY public.user_role (user_id, role_id) FROM stdin;
 --
 
 COPY public.users (id, name, email, password) FROM stdin;
-1	user	user@mail.com	$2y$12$vk8xQ24TPiQcxi3NzhTpfeX4p7nN2oNuLb.P07RJebRcEphlQqkLq
-2	admin	admin@mail.com	$2y$12$oalaqGkShKWecOCuY9.JBuTkY.ncWdJ5dks4pHSYq8kDCcGpCYm/y
+1	user	user@mail.com	$2a$10$LdIB3ehLAaIvvevDZm/8z.VsXock94qG0OUnE5QXW00/9gERRoqb6
+2	admin	admin@mail.com	$2a$10$/EEVHEtVFnh8MM8Zbu75kOc0UNvBP7Xh5Olne5jIKKR0PqEUsdQ5q
 \.
 
 
