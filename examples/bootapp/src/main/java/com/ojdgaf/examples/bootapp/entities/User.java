@@ -91,6 +91,10 @@ public class User {
         return roles;
     }
 
+    public String[] getRoleNames() {
+        return roles.stream().map(Role::getName).toArray(String[]::new);
+    }
+
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
