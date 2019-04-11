@@ -112,8 +112,8 @@ ALTER TABLE public.phones_id_seq OWNER TO root;
 
 CREATE TABLE public.phones (
     id integer DEFAULT nextval('public.phones_id_seq'::regclass) NOT NULL,
-    student_id integer NOT NULL,
-    number character varying(15) NOT NULL
+    student_id integer,
+    number character varying(30) NOT NULL
 );
 
 
@@ -237,6 +237,7 @@ ALTER TABLE public.user_role OWNER TO root;
 CREATE TABLE public.users (
     id integer NOT NULL,
     name character varying(100) NOT NULL,
+    username character varying(16) NOT NULL,
     email character varying(100) NOT NULL,
     password character varying(100) NOT NULL
 );
@@ -330,8 +331,8 @@ COPY public.record_books (id, student_id, serial_number) FROM stdin;
 --
 
 COPY public.roles (id, name) FROM stdin;
-1	user
-2	admin
+1	ROLE_USER
+2	ROLE_ADMIN
 \.
 
 
@@ -372,9 +373,9 @@ COPY public.user_role (user_id, role_id) FROM stdin;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-COPY public.users (id, name, email, password) FROM stdin;
-1	user	user@mail.com	$2a$10$LdIB3ehLAaIvvevDZm/8z.VsXock94qG0OUnE5QXW00/9gERRoqb6
-2	admin	admin@mail.com	$2a$10$/EEVHEtVFnh8MM8Zbu75kOc0UNvBP7Xh5Olne5jIKKR0PqEUsdQ5q
+COPY public.users (id, name, username, email, password) FROM stdin;
+1	User	user	user@mail.com	$2a$10$LdIB3ehLAaIvvevDZm/8z.VsXock94qG0OUnE5QXW00/9gERRoqb6
+2	Admin	admin	admin@mail.com	$2a$10$/EEVHEtVFnh8MM8Zbu75kOc0UNvBP7Xh5Olne5jIKKR0PqEUsdQ5q
 \.
 
 
@@ -410,7 +411,7 @@ SELECT pg_catalog.setval('public.record_books_id_seq', 3, false);
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
-SELECT pg_catalog.setval('public.roles_id_seq', 3, true);
+SELECT pg_catalog.setval('public.roles_id_seq', 3, false);
 
 
 --
@@ -424,7 +425,7 @@ SELECT pg_catalog.setval('public.students_id_seq', 3, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 3, true);
+SELECT pg_catalog.setval('public.users_id_seq', 3, false);
 
 
 --
