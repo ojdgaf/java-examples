@@ -53,7 +53,7 @@ public class Role {
 
     @Override
     public int hashCode() {
-        return 7 * getName().hashCode();
+        return 7 * (getId() == null ? super.hashCode() : getId());
     }
 
     @Override
@@ -62,8 +62,6 @@ public class Role {
         if (o == this) return true;
         if (!(o instanceof Role)) return false;
 
-        Role r = (Role) o;
-
-        return Objects.equals(getName(), r.getName());
+        return Objects.equals(getId(), ((Role) o).getId());
     }
 }

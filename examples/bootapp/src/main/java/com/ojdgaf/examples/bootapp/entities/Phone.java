@@ -2,7 +2,8 @@ package com.ojdgaf.examples.bootapp.entities;
 
 import java.util.Objects;
 import javax.persistence.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "phones")
@@ -13,10 +14,11 @@ public class Phone {
 
     @ManyToOne
     @JoinColumn(name = "student_id")
-    @JsonBackReference
     private Student student;
 
     @Column
+    @NotBlank
+    @Min(5)
     private String number;
 
     public Phone() {
@@ -52,7 +54,7 @@ public class Phone {
 
     @Override
     public int hashCode() {
-        return 13 * getId() * getNumber().hashCode();
+        return 13 * (getId() == null ? super.hashCode() : getId());
     }
 
     @Override
@@ -61,10 +63,7 @@ public class Phone {
         if (o == this) return true;
         if (!(o instanceof Phone)) return false;
 
-        Phone p = (Phone) o;
-
-        return Objects.equals(getId(), p.getId()) &&
-                Objects.equals(getNumber(), p.getNumber());
+        return Objects.equals(getId(), ((Phone) o).getId());
     }
 
     @Override

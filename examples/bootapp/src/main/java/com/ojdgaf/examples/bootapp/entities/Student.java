@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
 import javax.persistence.*;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
 @Entity
 @Table(name = "students")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Student.class)
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +18,9 @@ public class Student {
     @Column(name = "last_name")
     private String lastName;
 
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
-    private RecordBook recordBook;
-
-    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy(value = "id ASC")
     private List<Phone> phones = new ArrayList<>();
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
-    @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-    @OrderBy(value = "id ASC")
-    private List<Course> courses = new ArrayList<>();
 
     public Student() {
     }
@@ -65,14 +54,6 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public RecordBook getRecordBook() {
-        return recordBook;
-    }
-
-    public void setRecordBook(RecordBook recordBook) {
-        this.recordBook = recordBook;
-    }
-
     public List<Phone> getPhones() {
         return phones;
     }
@@ -91,27 +72,9 @@ public class Student {
         phone.setStudent(null);
     }
 
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
-    public void addCourse(Course course) {
-        getCourses().add(course);
-        course.getStudents().add(this);
-    }
-
-    public void removeCourse(Course course) {
-        getCourses().remove(course);
-        course.getStudents().remove(this);
-    }
-
     @Override
     public int hashCode() {
-        return 22 * getId() * getFirstName().hashCode() * getLastName().hashCode();
+        return 22 * (getId() == null ? super.hashCode() : getId());
     }
 
     @Override
@@ -120,11 +83,7 @@ public class Student {
         if (o == this) return true;
         if (!(o instanceof Student)) return false;
 
-        Student s = (Student) o;
-
-        return Objects.equals(getId(), s.getId()) &&
-                Objects.equals(getFirstName(), s.getFirstName()) &&
-                Objects.equals(getLastName(), s.getLastName());
+        return Objects.equals(getId(), ((Student) o).getId());
     }
 
     @Override

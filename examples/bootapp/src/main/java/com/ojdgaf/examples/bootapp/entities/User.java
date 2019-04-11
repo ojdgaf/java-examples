@@ -1,5 +1,7 @@
 package com.ojdgaf.examples.bootapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
@@ -31,6 +33,7 @@ public class User {
 
     @Column
     @NotBlank
+    @JsonIgnore
     private String password;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
@@ -91,6 +94,7 @@ public class User {
         return roles;
     }
 
+    @JsonIgnore
     public String[] getRoleNames() {
         return roles.stream().map(Role::getName).toArray(String[]::new);
     }
@@ -111,7 +115,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return 4 * getUsername().hashCode();
+        return 4 * (getId() == null ? super.hashCode() : getId());
     }
 
     @Override
@@ -120,8 +124,6 @@ public class User {
         if (o == this) return true;
         if (!(o instanceof User)) return false;
 
-        User u = (User) o;
-
-        return Objects.equals(getUsername(), u.getUsername());
+        return Objects.equals(getId(), ((User) o).getId());
     }
 }
