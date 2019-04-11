@@ -9,12 +9,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
-import com.ojdgaf.examples.bootapp.services.UserDetailsServiceImpl;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Component
 public class JwtProvider {
@@ -24,18 +18,14 @@ public class JwtProvider {
     @Value("${app.jwt.expirationInMs}")
     private long expirationInMs;
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
     @PostConstruct
     protected void init() {
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
 
-    public String createToken(String username, String[] roleNames) {
-        Claims claims = Jwts.claims();
-        claims.setSubject(username);
-        claims.put("auth", AuthorityUtils.createAuthorityList(roleNames));
+    public String createToken(Map<String, Object> claims) {
+        if (!validateClaims(claims))
+            throw new JwtException("Could not create JWT token: invalid claims");
 
         Date issuedAt = new Date();
         Date expiresAt = new Date(issuedAt.getTime() + expirationInMs);
@@ -48,12 +38,6 @@ public class JwtProvider {
                 .compact();
     }
 
-    Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(extractUsername(token));
-
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
-
     String extractToken(HttpServletRequest req) {
         String header = req.getHeader("Authorization");
 
@@ -63,20 +47,40 @@ public class JwtProvider {
         return null;
     }
 
-    boolean validateToken(String token) {
+    String extractUsername(String token) {
+        return extractClaims(token).getSubject();
+    }
+
+    String[] extractAuthorityNames(String token) {
+        String[] authorityNames = new String[0];
+
+        try {
+            Object element = extractClaims(token).get("authorities");
+            Collection<String> collection = (Collection<String>) element;
+            return collection.toArray(authorityNames);
+        } catch (Exception e) {
+            return authorityNames;
+        }
+    }
+
+    void validateToken(String token) {
         extractClaims(token);
-        return true;
+    }
+
+    private Claims extractClaims(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
     private boolean validateHeader(String header) {
         return header != null && header.startsWith("Bearer ");
     }
 
-    private String extractUsername(String token) {
-        return extractClaims(token).getBody().getSubject();
-    }
+    private boolean validateClaims(Map<String, Object> claims) {
+        if (!claims.containsKey("sub"))
+            return false;
 
-    private Jws<Claims> extractClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+        Object subject = claims.get("sub");
+
+        return subject instanceof String && !((String) subject).isEmpty();
     }
 }

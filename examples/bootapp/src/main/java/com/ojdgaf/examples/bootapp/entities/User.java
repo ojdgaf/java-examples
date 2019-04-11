@@ -1,5 +1,6 @@
 package com.ojdgaf.examples.bootapp.entities;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.validation.constraints.Size;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column
@@ -30,7 +31,6 @@ public class User {
 
     @Column
     @NotBlank
-    @Size(min = 6, max = 16)
     private String password;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
@@ -95,7 +95,33 @@ public class User {
         return roles.stream().map(Role::getName).toArray(String[]::new);
     }
 
+    public void addRole(Role role) {
+        roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(Role role) {
+        roles.remove(role);
+        role.getUsers().remove(this);
+    }
+
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public int hashCode() {
+        return 4 * getUsername().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (o == this) return true;
+        if (!(o instanceof User)) return false;
+
+        User u = (User) o;
+
+        return Objects.equals(getUsername(), u.getUsername());
     }
 }
