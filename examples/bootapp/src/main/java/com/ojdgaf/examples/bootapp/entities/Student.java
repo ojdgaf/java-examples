@@ -1,8 +1,6 @@
 package com.ojdgaf.examples.bootapp.entities;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 import javax.persistence.*;
 
 @Entity
@@ -18,9 +16,17 @@ public class Student {
     @Column(name = "last_name")
     private String lastName;
 
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    private RecordBook recordBook;
+
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy(value = "id ASC")
     private List<Phone> phones = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
+    @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @OrderBy(value = "id ASC")
+    private Set<Course> courses = new HashSet<>();
 
     public Student() {
     }
