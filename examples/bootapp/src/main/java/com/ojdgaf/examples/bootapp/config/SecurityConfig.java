@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers("/login", "/register").anonymous()
+                .antMatchers("/", "/login", "/register").anonymous()
                 .antMatchers("/api/users/**", "/api/roles/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/api/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .anyRequest().authenticated();
